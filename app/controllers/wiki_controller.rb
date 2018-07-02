@@ -178,14 +178,11 @@ class WikiController < ApplicationController
 
   # Creates a new page or updates an existing one
   def update
-    @page = @wiki.find_or_new_page(wiki_page_title)
+    @page = @wiki.find_page(params[:id])
+    render_404 if @page.nil?
+    @content = @page.content
     return if locked?
 
-    @page.content = WikiContent.new(page: @page) if @page.new_record?
-
-    @content = @page.content_for_version(params[:version])
-    # don't keep previous comment
-    @content.comments = nil
     @page.attach_files(permitted_params.attachments.to_h)
 
     return if nothing_to_update?
@@ -204,7 +201,6 @@ class WikiController < ApplicationController
     else
       render action: 'edit'
     end
-
   rescue ActiveRecord::StaleObjectError
     # Optimistic locking exception
     flash.now[:error] = l(:notice_locking_conflict)
@@ -399,9 +395,9 @@ class WikiController < ApplicationController
 
   def nothing_to_update?
     if !@page.new_record? &&
-      params[:content].present? &&
-      @content.text == params[:content][:text] &&
-      @page.parent_id == permitted_params.wiki_page[:parent_id].to_i &&
+       params[:content].present? &&
+       @content.text == permitted_params.wiki_content[:text] &&
+       @page.parent_id == permitted_params.wiki_page[:parent_id].to_i
 
       render_attachment_warning_if_needed(@page)
       # don't save if text wasn't changed
