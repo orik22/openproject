@@ -83,6 +83,14 @@ en:
     description_subwork_package: "Child of work package #%{id}"
     editor:
       macro:
+        child_pages:
+          button: 'Links to child pages'
+          include_parent: 'Include parent'
+          text: '[Placeholder] Links to child pages of'
+          page: 'Wiki page'
+          this_page: 'this page'
+          hint: |
+            Leave this field empty to list all child pages of the current page. If you want to reference a different page, provide its title or slug.
         toc: 'Table of contents'
         wiki_page_include:
           button: 'Include content of another wiki page'
@@ -101,7 +109,6 @@ en:
         embedded_table:
           button: 'Embed work package table'
           text: 'Embedded work package table (placeholder)'
-
 
     error:
       internal: "An internal error has occurred."
