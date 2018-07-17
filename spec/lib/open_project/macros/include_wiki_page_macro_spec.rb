@@ -84,6 +84,10 @@ describe 'OpenProject include wiki page macro', with_settings: { text_formatting
   let(:input) { }
   subject { format_text(input, project: project) }
 
+  before do
+    login_as user
+  end
+
   def error_html(exception_msg)
     "<p><macro class=\"macro-unavailable\" data-macro-name=\"include_wiki_page\">" \
           "Error executing the macro include_wiki_page (#{exception_msg})</macro></p>"
